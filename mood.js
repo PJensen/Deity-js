@@ -10,9 +10,9 @@
  * Hysteresis: moods are sticky. Once entered, they resist leaving.
  */
 
-const DIMENSIONS = ['wrath', 'serenity', 'hunger', 'amusement', 'sorrow', 'chaos'];
+export const DIMENSIONS = ['wrath', 'serenity', 'hunger', 'amusement', 'sorrow', 'chaos'];
 
-class Mood {
+export class Mood {
   /**
    * @param {object} personality - baseline attractor, e.g. { wrath: 0.1, serenity: 0.4, ... }
    * @param {object} opts
@@ -270,5 +270,3 @@ class Mood {
 }
 
 Mood.DIMENSIONS = DIMENSIONS;
-
-module.exports = Mood;

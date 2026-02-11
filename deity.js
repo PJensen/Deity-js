@@ -9,13 +9,13 @@
  *   Supplicant (ML model of the worshipper) modulates reactions
  */
 
-const Ledger = require('./ledger');
-const Mood = require('./mood');
-const Supplicant = require('./supplicant');
+import { Ledger } from './ledger.js';
+import { Mood } from './mood.js';
+import { Supplicant } from './supplicant.js';
 
 const EVENTS = ['moodShift', 'utterance', 'demand', 'omen', 'miracle', 'wrath'];
 
-class Deity {
+export class Deity {
   /**
    * @param {object} opts
    * @param {object} opts.personality - mood baseline, e.g. { wrath: 0.1, serenity: 0.5, ... }
@@ -368,5 +368,3 @@ class Deity {
 
 Deity.EVENTS = EVENTS;
 Deity.MOOD_DIMENSIONS = Mood.DIMENSIONS;
-
-module.exports = Deity;
