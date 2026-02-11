@@ -36,6 +36,7 @@ export class Deity {
     thresholds = {},
     alignment = 'neutral',
     favorMap = {},
+    neglectThreshold = 3,
   } = {}) {
     this.name = name;
     this._alignment = alignment;
@@ -69,6 +70,9 @@ export class Deity {
       omen: 0.3,       // chaos exceeds this
       ...thresholds,
     };
+
+    // Ticks of no direct interaction before neglect is recorded
+    this._neglectThreshold = neglectThreshold;
 
     // Track previous dominant mood for shift detection
     this._prevDominant = null;
@@ -210,13 +214,13 @@ export class Deity {
       this._tick++;
       this.ledger.advanceTick(1);
 
-      // Record neglect if no recent interaction
+      // Record neglect if no recent direct interaction
       const ticksSinceOffer = this.ledger.ticksSinceLast('offer');
       const ticksSincePray = this.ledger.ticksSinceLast('pray');
       const ticksSinceDesecrate = this.ledger.ticksSinceLast('desecrate');
       const minTicksSince = Math.min(ticksSinceOffer, ticksSincePray, ticksSinceDesecrate);
 
-      if (minTicksSince > 3) {
+      if (minTicksSince > this._neglectThreshold) {
         this.ledger.record('neglect', { synthetic: true });
         this.supplicant.record('neglect');
       }
@@ -346,6 +350,7 @@ export class Deity {
       mood: this.mood.serialize(),
       supplicant: this.supplicant.serialize(),
       thresholds: { ...this._thresholds },
+      neglectThreshold: this._neglectThreshold,
       prevDominant: this._prevDominant,
     };
   }
@@ -356,6 +361,7 @@ export class Deity {
       alignment: data.alignment,
       favorMap: data.favorMap,
       thresholds: data.thresholds,
+      neglectThreshold: data.neglectThreshold,
     });
     deity._tick = data.tick;
     deity.ledger = Ledger.deserialize(data.ledger);
